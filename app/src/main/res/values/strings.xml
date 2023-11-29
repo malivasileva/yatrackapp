@@ -1,3 +1,10 @@
 <resources>
     <string name="app_name">yatrackapp</string>
+    <string name="update_db">Обновить базу данных</string>
+    <string name="add_tracker">Подключение трекера</string>
+    <string name="set_distance">Установить допустимое расстояние удаления</string>
+    <string name="add_meeting_place">Добавить точку-ориентир</string>
+    <string name="help">Помощь</string>
+    <string name="credits">Информация о разработчике</string>
+    <string name="console">Консоль</string>
 </resources>

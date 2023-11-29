@@ -1,0 +1,59 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="400dp"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:gravity="center"
+    android:background="@android:color/darker_gray">
+
+    <!-- Добавьте внутренние элементы, такие как кнопки или текстовые поля -->
+    <Button
+        android:id="@+id/btn_updDb"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="@string/update_db"
+        style="@style/ButtonStyle"/>
+
+    <Button
+        android:id="@+id/btn_add_tracker"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="@string/add_tracker"
+        style="@style/ButtonStyle"/>
+
+    <Button
+        android:id="@+id/btn_set_distance"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="@string/set_distance"
+        style="@style/ButtonStyle"/>
+
+    <Button
+        android:id="@+id/btn_meeting"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="@string/add_meeting_place"
+        style="@style/ButtonStyle"/>
+
+    <Button
+        android:id="@+id/btn_help"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="@string/help"
+        style="@style/ButtonStyle"/>
+
+    <Button
+        android:id="@+id/btn_credits"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="@string/credits"
+        style="@style/ButtonStyle"/>
+
+    <Button
+        android:id="@+id/btn_console"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="@string/console"
+        style="@style/ButtonStyle"/>
+
+</LinearLayout>
