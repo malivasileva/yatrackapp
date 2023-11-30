@@ -41,6 +41,7 @@
             android:visibility="visible" />
 
         <Button
+            android:id="@+id/btn_connected"
             android:layout_width="48dp"
             android:layout_height="48dp"
             android:layout_toRightOf="@id/btnNotifications"
@@ -50,7 +51,9 @@
             android:background="@drawable/shape_button"
             android:contentDescription="Connected devices"
             android:backgroundTint="@color/black"
-            android:visibility="visible"/>
+            android:visibility="visible"
+            android:textColor="@color/white"
+            android:textSize="24sp"/>
 
         <ImageButton
             android:id="@+id/btnInfo"

@@ -6,6 +6,7 @@ import androidx.room.Room;
 
 import com.yandex.mapkit.MapKitFactory;
 
+import java.util.List;
 public class TrackApplication extends Application {
     private String MAPKIT_API_KEY = "1e150f61-775c-493a-b731-c6662e0e67a6";
     AppDatabase database;
@@ -19,7 +20,14 @@ public class TrackApplication extends Application {
         database = Room.databaseBuilder(this, AppDatabase.class, "database")
                 .allowMainThreadQueries()
                 .build();
-        initDB();
+
+        /*List<Tracker> trackerList = database.trackerDao().getAllTrackers();
+        List<Employee> employeeList = database.employeeDao().getAllEmployees();
+        System.out.println("pumpkin");
+        employeeList.stream()
+                .map(Employee::getId)
+                .forEach(System.out::println);*/
+
     }
 
     public AppDatabase getDatabase() {
@@ -32,24 +40,20 @@ public class TrackApplication extends Application {
 
     private void initDB() {
 
-
-// Создание нового сотрудника
         Employee newEmployee = new Employee();
-        newEmployee.setName("Иванов Иван");
+        newEmployee.setName("Семёнов Александр");
         newEmployee.setJob("Инженер");
-
-// Вставка сотрудника в базу данных
         database.employeeDao().insert(newEmployee);
 
 // Создание нового трекера
-        Tracker newTracker = new Tracker();
-        newTracker.setMac("00:11:22:33:44:55");
-        newTracker.setEmployeeId(newEmployee.getId());
-        newTracker.setLastLati(52.262129);
-        newTracker.setLastLongi(104.264121);
+/*        Tracker newTracker = new Tracker();
+        newTracker.setMac("00:11:22:33:44:77");
+        newTracker.setEmployeeId(4);
+        newTracker.setLastLati(52.263120);
+        newTracker.setLastLongi(104.263362);
 
 // Вставка трекера в базу данных
-        database.trackerDao().insert(newTracker);
+        database.trackerDao().insert(newTracker);*/
 
     }
 }

@@ -5,7 +5,10 @@ import android.os.AsyncTask;
 import android.os.Bundle;
 import android.view.Gravity;
 import android.view.View;
+import android.widget.AdapterView;
+import android.widget.Button;
 import android.widget.ImageButton;
+import android.widget.ListView;
 
 import androidx.drawerlayout.widget.DrawerLayout;
 //import androidx.slidingpanelayout.widget.SlidingPaneLayout;
@@ -16,6 +19,7 @@ import com.yandex.mapkit.geometry.Point;
 import com.yandex.mapkit.map.CameraPosition;
 import com.yandex.mapkit.map.MapObjectCollection;
 import com.yandex.mapkit.map.PlacemarkMapObject;
+import com.yandex.mapkit.map.TextStyle;
 import com.yandex.mapkit.mapview.MapView;
 import com.yandex.runtime.image.ImageProvider;
 
@@ -29,9 +33,13 @@ public class MainActivity extends Activity {
     private MapView mapView;
     private MapObjectCollection mapObjects;
     private DrawerLayout drawerLayout;
+    TrackerEmployeeAdapter adapter;
+    ListView listView;
+//    List<TrackerEmployee> dataList;
 //    private SlidingPaneLayout slidingPaneLayout;
     private ImageButton btnSettings;
     private ImageButton btnInfo;
+    private Button btnCon;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -47,6 +55,8 @@ public class MainActivity extends Activity {
         drawerLayout = findViewById(R.id.drawer_layout);
         btnSettings = findViewById(R.id.btnSettings);
         btnInfo = findViewById(R.id.btnInfo);
+        btnCon = findViewById(R.id.btn_connected);
+        listView = findViewById(R.id.listView);
 
         btnSettings.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -58,6 +68,19 @@ public class MainActivity extends Activity {
             @Override
             public void onClick(View view) {
                 toggleRightSlideMenu();
+            }
+        });
+
+        listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                TrackerEmployee trackerEmployee = (TrackerEmployee) parent.getItemAtPosition(position);
+                Point empPos = new Point (trackerEmployee.getLastLati(), trackerEmployee.getLastLongi());
+                mapView.getMap().move(
+                        new CameraPosition(empPos,17.0f, 0.0f, 0.0f),
+                        new Animation(Animation.Type.SMOOTH, 1),
+                        null);
+                drawerLayout.closeDrawer(Gravity.RIGHT);
             }
         });
 
@@ -104,13 +127,17 @@ public class MainActivity extends Activity {
     }
 
     public void handleDatabaseResult(List<TrackerEmployee> trackerEmployeeList) {
+        adapter = new TrackerEmployeeAdapter(this, trackerEmployeeList);
+        listView.setAdapter(adapter);
         for (TrackerEmployee tracker : trackerEmployeeList) {
             Point point = new Point (tracker.getLastLati(), tracker.getLastLongi());
             PlacemarkMapObject mark = mapObjects.addPlacemark(point);
             mark.setIcon(ImageProvider.fromResource(this, R.drawable.ic_marker));
-
-
+            mark.setText(tracker.getName() + "\n" + tracker.getJob());
+            mark.setTextStyle(new TextStyle().setPlacement(TextStyle.Placement.TOP));
         }
+        String connected = Integer.toString(trackerEmployeeList.size());
+        btnCon.setText(connected);
     }
 
     public class DatabaseTask extends AsyncTask<Void, Void, List<TrackerEmployee>> {
@@ -125,9 +152,6 @@ public class MainActivity extends Activity {
 
         @Override
         protected List<TrackerEmployee> doInBackground(Void... voids) {
-            // Выполните ваш запрос к базе данных и верните результат
-            // Вам нужно заменить YourObject, YourDao и ваш запрос
-            // на соответствующие классы и методы из вашего проекта
             if (database != null) {
                 return database.trackerDao().getAllTrackersWithEmployee();
             } else {
@@ -137,7 +161,6 @@ public class MainActivity extends Activity {
 
         @Override
         protected void onPostExecute(List<TrackerEmployee> trackerEmployeeList) {
-            // Обработайте результат в главном потоке
             MainActivity activity = activityReference.get();
             if (activity != null) {
                 activity.handleDatabaseResult(trackerEmployeeList);

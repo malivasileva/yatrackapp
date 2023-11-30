@@ -6,7 +6,6 @@
     android:gravity="center"
     android:background="@android:color/darker_gray">
 
-    <!-- Добавьте внутренние элементы, такие как кнопки или текстовые поля -->
     <Button
         android:id="@+id/btn_updDb"
         android:layout_width="match_parent"

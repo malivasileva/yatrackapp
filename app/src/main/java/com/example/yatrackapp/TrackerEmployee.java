@@ -7,9 +7,14 @@ public class TrackerEmployee {
     public String job;
     public double lastLati;
     public double lastLongi;
+    public int employee_id;
 
     public int getId() {
         return id;
+    }
+
+    public int getEmployee_id() {
+        return employee_id;
     }
 
     public String getJob() {
@@ -32,3 +37,5 @@ public class TrackerEmployee {
         return lastLongi;
     }
 }
+
+
