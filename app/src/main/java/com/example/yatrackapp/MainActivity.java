@@ -1,14 +1,22 @@
 package com.example.yatrackapp;
 
 import android.app.Activity;
+import android.content.Context;
 import android.os.AsyncTask;
+import android.os.Build;
 import android.os.Bundle;
+import android.view.Display;
 import android.view.Gravity;
 import android.view.View;
+import android.view.WindowManager;
 import android.widget.AdapterView;
+import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.ImageButton;
 import android.widget.ListView;
+import android.widget.PopupWindow;
+import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.drawerlayout.widget.DrawerLayout;
 //import androidx.slidingpanelayout.widget.SlidingPaneLayout;
@@ -24,6 +32,7 @@ import com.yandex.mapkit.mapview.MapView;
 import com.yandex.runtime.image.ImageProvider;
 
 import java.lang.ref.WeakReference;
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
@@ -40,11 +49,17 @@ public class MainActivity extends Activity {
     private ImageButton btnSettings;
     private ImageButton btnInfo;
     private Button btnCon;
+    private ImageButton btnNotif;
+    private PopupWindow notifWindow;
+    private List<Notification> notificationList = new ArrayList<>();
+    NotificationAdapter notificationAdapter;
+    private ListView lv_notifications;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         // Now MapView can be created.
         setContentView(R.layout.actitvity_main);
+        createNotificationWindow();
         super.onCreate(savedInstanceState);
 
         db = TrackApplication.getInstance().getDatabase();
@@ -56,7 +71,13 @@ public class MainActivity extends Activity {
         btnSettings = findViewById(R.id.btnSettings);
         btnInfo = findViewById(R.id.btnInfo);
         btnCon = findViewById(R.id.btn_connected);
+        btnNotif = findViewById(R.id.btnNotifications);
         listView = findViewById(R.id.listView);
+        lv_notifications = notifWindow.getContentView().findViewById(R.id.lv_notification);
+
+        notificationAdapter = new NotificationAdapter(this, notificationList);
+        lv_notifications.setAdapter(notificationAdapter);
+
 
         btnSettings.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -84,11 +105,21 @@ public class MainActivity extends Activity {
             }
         });
 
+        btnNotif.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                showNotificationWindow();
+            }
+        });
+
         // And to show what can be done with it, we move the camera to the center of Saint Petersburg.
         mapView.getMap().move(
                 new CameraPosition(TARGET_LOCATION, 17.0f, 0.0f, 0.0f),
-                new Animation(Animation.Type.SMOOTH, 5),
+                new Animation(Animation.Type.SMOOTH, 3),
                 null);
+
+        sendNotification("Have a good day!");
+        sendNotification("Have a good night!");
 
         new DatabaseTask(this, db).execute();
 
@@ -138,6 +169,49 @@ public class MainActivity extends Activity {
         }
         String connected = Integer.toString(trackerEmployeeList.size());
         btnCon.setText(connected);
+    }
+
+    public void createNotificationWindow () {
+        if (notifWindow == null) {
+            View view = View.inflate(this, R.layout.notification_window, null);
+            ImageButton btnCloseNotif = view.findViewById(R.id.btn_close_notifications);
+            //TextView tvNotif = view.findViewById(R.id.textView);
+
+            int[] dimensions = getScreenDimensions();
+
+            int width = (int) (dimensions[0] / 2);
+            int height = dimensions[1] - 96;
+            notifWindow = new PopupWindow(view, width, height, false);
+
+            btnCloseNotif.setOnClickListener(v -> {
+                notifWindow.dismiss();
+            });
+        }
+    }
+    public void showNotificationWindow() {
+        if (!notifWindow.isShowing()) {
+            notifWindow.showAtLocation(drawerLayout,Gravity.CENTER_HORIZONTAL | Gravity.TOP, 0, 32);
+        }
+
+    }
+
+    private int[] getScreenDimensions() {
+        WindowManager wm = (WindowManager) getSystemService(Context.WINDOW_SERVICE);
+        Display display = wm.getDefaultDisplay();
+        android.graphics.Point size = new android.graphics.Point();
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN_MR1) {
+            display.getRealSize(size);
+        } else {
+            display.getSize(size);
+        }
+        int[] dimensions = {size.x, size.y};
+        return dimensions;
+    }
+
+    public void sendNotification(String text) {
+        notificationList.add(0, new Notification(text));
+        Toast.makeText(this, text, Toast.LENGTH_SHORT).show();
+        notificationAdapter.notifyDataSetChanged();
     }
 
     public class DatabaseTask extends AsyncTask<Void, Void, List<TrackerEmployee>> {

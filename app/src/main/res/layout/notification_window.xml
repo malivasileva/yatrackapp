@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@drawable/bg_notification_window">
+
+    <ImageButton
+        android:id="@+id/btn_close_notifications"
+        android:layout_width="48dp"
+        android:layout_height="48dp"
+        android:contentDescription="Close the window"
+        android:src="@drawable/ic_close"
+        android:layout_alignParentTop="true"
+        android:layout_alignParentEnd="true"
+        android:layout_margin="8dp"
+        android:background="@drawable/bg_item"></ImageButton>
+
+    <ListView
+        android:id="@+id/lv_notification"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_marginStart="16dp"
+        android:layout_marginTop="62dp"
+        android:layout_marginEnd="16dp"
+        android:layout_marginBottom="16dp"
+        android:dividerHeight="8dp"
+        android:divider="@color/transparent"/>
+
+</RelativeLayout>
